@@ -6,7 +6,7 @@ import socket from "../socket";
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<string[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Home() {
       setTransport("N/A");
     }
 
-    function onMessage(message) {
+    function onMessage(message : string) {
       setMessages((prevMessages) => [...prevMessages, message]);
     }
 
