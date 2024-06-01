@@ -17,14 +17,38 @@ import YtPlayer from "./ytplayer";
 const EEGComponent = () => {
   const [message, setMessage] = useState("default message");
   const [isDrawerOpen, setDrawerIsOpen] = useState(false);
-  const [average, setAverage] = useState(0);
+  const [average, setAverage] = useState(0.5);
   const buffer = useRef([]);
+  useEffect(() => {
+    if (buffer.current.length >= 3) {
+      // adjust based on data rate
+      const sum = buffer.current.reduce(
+        (acc, val) => acc + parseInt(val, 10),
+        0
+      );
+      const avg = sum / buffer.current.length;
+      setAverage(avg);
+      buffer.current = []; // clear the buffer
+    }
+  }, [buffer.current.length]);
 
   useEffect(() => {
     const socket = io("http://127.0.0.1:5001");
 
     socket.on("connect", () => {
       console.log("Socket connected");
+      socket.emit("start_loop");
+      console.log("Sent start_loop");
+    });
+
+    socket.on("average_amplitude", (data) => {
+      console.log("Received average_amplitude: ", data);
+      if (data < 300) {
+        setDrawerIsOpen(true);
+        buffer.current.push("0");
+      } else {
+        buffer.current.push("1");
+      }
     });
 
     socket.on("eegData", (data) => {
@@ -90,7 +114,9 @@ const EEGComponent = () => {
       <div className="flex flex-row items-center space-x-4 pt-10 pl-10">
         <YtPlayer isPlaying={!isDrawerOpen} />
         <div className="flex flex-col w-96 h-40 space-y-5 pl-10">
-          <div className="text-xl">your focus level: {average}</div>
+          <div className="text-xl">
+            {average < 0.5 ? "You are not focused" : "You are focused"}
+          </div>
           <Progress className="w-full" value={average * 100} />
         </div>
       </div>
