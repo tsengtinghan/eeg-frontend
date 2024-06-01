@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import YtPlayer from "./ytplayer";
 
 const EEGComponent = () => {
   const [message, setMessage] = useState("default message");
@@ -26,7 +27,7 @@ const EEGComponent = () => {
       buffer.current.push(data);
 
       if (buffer.current.length >= 50) {
-        // Adjust based on data rate
+        // adjust based on data rate
         const sum = buffer.current.reduce(
           (acc, val) => acc + parseInt(val, 10),
           0
@@ -39,7 +40,7 @@ const EEGComponent = () => {
           performActionForMostlyZeros();
         }
 
-        buffer.current = []; // Clear the buffer
+        buffer.current = []; // clear the buffer
       }
     });
 
@@ -82,6 +83,7 @@ const EEGComponent = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      <YtPlayer isPlaying={!isDrawerOpen} />
     </div>
   );
 };
