@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import {
   Drawer,
   DrawerClose,
@@ -16,14 +17,18 @@ import YtPlayer from "./ytplayer";
 const EEGComponent = () => {
   const [message, setMessage] = useState("default message");
   const [isDrawerOpen, setDrawerIsOpen] = useState(false);
-  const [average, setAverage] = useState(0); 
+  const [average, setAverage] = useState(0);
   const buffer = useRef([]);
 
   useEffect(() => {
-    const socket = io("http://127.0.0.1:5000");
+    const socket = io("http://127.0.0.1:5001");
+
+    socket.on("connect", () => {
+      console.log("Socket connected");
+    });
 
     socket.on("eegData", (data) => {
-      console.log(data);
+      console.log("Received eegData: ", data);
       buffer.current.push(data);
 
       if (buffer.current.length >= 50) {
@@ -66,7 +71,6 @@ const EEGComponent = () => {
   return (
     <div>
       <h1>EEG Data Analysis</h1>
-      <div>focus: {average}</div>
       <Drawer open={isDrawerOpen} onOpenChange={setDrawerIsOpen}>
         <DrawerTrigger>Open</DrawerTrigger>
         <DrawerContent>
@@ -83,7 +87,13 @@ const EEGComponent = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <YtPlayer isPlaying={!isDrawerOpen} />
+      <div className="flex flex-row items-center space-x-4 pt-10 pl-10">
+        <YtPlayer isPlaying={!isDrawerOpen} />
+        <div className="flex flex-col w-96 h-40 space-y-5 pl-10">
+          <div className="text-xl">your focus level: {average}</div>
+          <Progress className="w-full" value={average * 100} />
+        </div>
+      </div>
     </div>
   );
 };

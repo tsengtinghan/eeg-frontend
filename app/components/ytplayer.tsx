@@ -51,8 +51,8 @@ const YtPlayer = ({ isPlaying }: YtPlayerProps) => {
   }, [isPlaying]);
 
   return (
-    <div className="p-5 relative overflow-hidden w-full h-full">
-      <div className="absolute inset-0" id="player" />
+    <div>
+      <div id="player" />
     </div>
   );
 };
