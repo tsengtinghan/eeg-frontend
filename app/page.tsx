@@ -9,6 +9,7 @@ export default function Home() {
   const [transport, setTransport] = useState("N/A");
   const [messages, setMessages] = useState<string[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+  
 
   useEffect(() => {
     socket.connect(); // Initiate socket connection
