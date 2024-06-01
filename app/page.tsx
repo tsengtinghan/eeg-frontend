@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import socket from "../socket";
+import EEGComponent from "./components/eeg";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
@@ -63,6 +64,7 @@ export default function Home() {
           <li key={index}>{msg}</li>
         ))}
       </ul>
+      <EEGComponent />
     </div>
   );
 }
