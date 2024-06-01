@@ -33,7 +33,8 @@ const EEGComponent = () => {
       console.log("Received average_amplitude: ", data);
 
       if (data < 300) {
-        buffer.current.push(0);
+        buffer.current.push(0)
+        setDrawerIsOpen(true);;
       } else {
         buffer.current.push(1);
       }
