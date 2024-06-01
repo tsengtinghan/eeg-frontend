@@ -43,28 +43,17 @@ export default function Home() {
     };
   }, []);
 
-  const sendMessage = () => {
-    if (inputMessage) {
-      socket.send(inputMessage);
-      setInputMessage("");
-    }
-  };
+  // const sendMessage = () => {
+  //   if (inputMessage) {
+  //     socket.send(inputMessage);
+  //     setInputMessage("");
+  //   }
+  // };
 
   return (
     <div>
       <p>Status: {isConnected ? "connected" : "disconnected"}</p>
       <p>Transport: {transport}</p>
-      <input
-        type="text"
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-      />
-      <button onClick={sendMessage}>Send Message</button>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
       <EEGComponent />
     </div>
   );

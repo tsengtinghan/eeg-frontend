@@ -15,12 +15,14 @@ import {
 const EEGComponent = () => {
   const [message, setMessage] = useState("default message");
   const [isDrawerOpen, setDrawerIsOpen] = useState(false);
+  const [average, setAverage] = useState(0); 
   const buffer = useRef([]);
 
   useEffect(() => {
     const socket = io("http://127.0.0.1:5000");
 
     socket.on("eegData", (data) => {
+      console.log(data);
       buffer.current.push(data);
 
       if (buffer.current.length >= 50) {
@@ -30,7 +32,7 @@ const EEGComponent = () => {
           0
         );
         const avg = sum / buffer.current.length;
-
+        setAverage(avg);
         if (avg > 0.5) {
           performActionForMostlyOnes();
         } else {
@@ -53,7 +55,6 @@ const EEGComponent = () => {
   const performActionForMostlyOnes = () => {
     setMessage("Mostly 1s received");
     setDrawerIsOpen(true);
-    
   };
 
   const performActionForMostlyZeros = () => {
@@ -64,17 +65,19 @@ const EEGComponent = () => {
   return (
     <div>
       <h1>EEG Data Analysis</h1>
-      <p>{message}</p>
+      <div>focus: {average}</div>
       <Drawer open={isDrawerOpen} onOpenChange={setDrawerIsOpen}>
+        <DrawerTrigger>Open</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Are you still there?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+            <DrawerDescription>
+              Your brainwave said you're not paying attention.
+            </DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>Submit</Button>
             <DrawerClose>
-              <Button variant="outline">Cancel</Button>
+              <Button>Yes Sir</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
